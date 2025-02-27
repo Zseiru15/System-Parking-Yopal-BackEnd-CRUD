@@ -11,12 +11,12 @@ import (
 )
 
 type Reservas struct {
-	Id           int       `orm:"column(Id_reservas);pk"`
+	Id           int       `orm:"column(Id_reservas);pk;auto"`
 	IdUsuariosFk *Usuarios `orm:"column(Id_usuarios_fk);rel(fk)"`
 	IdSlotsFk    *Slots    `orm:"column(Id_slots_fk);rel(fk)"`
 	Estado       bool      `orm:"column(Estado)"`
-	FechaInicio  time.Time `orm:"column(Fecha_Inicio);type(timestamp with time zone)"`
-	FechaFinal   time.Time `orm:"column(Fecha_Final);type(timestamp with time zone)"`
+	FechaInicio  time.Time `orm:"column(Fecha_Inicio);type(timestamp with time zone);auto_now_add"`
+	FechaFinal   time.Time `orm:"column(Fecha_Final);type(timestamp with time zone);auto_now"`
 }
 
 func (t *Reservas) TableName() string {
@@ -74,7 +74,7 @@ func GetAllReservas(query map[string]string, fields []string, sortby []string, o
 				} else if order[i] == "asc" {
 					orderby = v
 				} else {
-					return nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
+					return nil, errors.New("error: Invalid order. Must be either [asc|desc]")
 				}
 				sortFields = append(sortFields, orderby)
 			}
@@ -88,16 +88,16 @@ func GetAllReservas(query map[string]string, fields []string, sortby []string, o
 				} else if order[0] == "asc" {
 					orderby = v
 				} else {
-					return nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
+					return nil, errors.New("error: Invalid order. Must be either [asc|desc]")
 				}
 				sortFields = append(sortFields, orderby)
 			}
 		} else if len(sortby) != len(order) && len(order) != 1 {
-			return nil, errors.New("Error: 'sortby', 'order' sizes mismatch or 'order' size is not 1")
+			return nil, errors.New("error: 'sortby', 'order' sizes mismatch or 'order' size is not 1")
 		}
 	} else {
 		if len(order) != 0 {
-			return nil, errors.New("Error: unused 'order' fields")
+			return nil, errors.New("error: unused 'order' fields")
 		}
 	}
 

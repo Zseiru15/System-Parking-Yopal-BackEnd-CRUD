@@ -3,7 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"errors"
-	"github.com/Zseiru15/API_CRUD_SPY/models"
+	"github.com/Zseiru15/System-Parking-Yopal-BackEnd/API_CRUD_SPY/models"
 	"strconv"
 	"strings"
 
@@ -155,6 +155,11 @@ func (c *RankingController) Put() {
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
 		if err := models.UpdateRankingById(&v); err == nil {
 			c.Data["json"] = "OK"
+			c.Data["json"] = map[string]interface{}{
+				"succes": true,
+				"status": 200,
+				"message": "actualizacion realizada correctamente",
+				"data":    v}
 		} else {
 			c.Data["json"] = err.Error()
 		}
@@ -176,6 +181,11 @@ func (c *RankingController) Delete() {
 	id, _ := strconv.Atoi(idStr)
 	if err := models.DeleteRanking(id); err == nil {
 		c.Data["json"] = "OK"
+		c.Data["json"] = map[string]interface{}{
+			"succes": true,
+			"status": 200,
+			"message": "se elimino correctamente",
+			"dato eliminado con id": id}
 	} else {
 		c.Data["json"] = err.Error()
 	}

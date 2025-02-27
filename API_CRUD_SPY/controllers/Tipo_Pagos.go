@@ -3,7 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"errors"
-	"github.com/Zseiru15/API_CRUD_SPY/models"
+	"github.com/Zseiru15/System-Parking-Yopal-BackEnd/API_CRUD_SPY/models"
 	"strconv"
 	"strings"
 
@@ -34,14 +34,30 @@ func (c *TipoPagosController) URLMapping() {
 func (c *TipoPagosController) Post() {
 	var v models.TipoPagos
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
+		// Asignar Estado a true si no se especifica
+		if !v.Estado {
+			v.Estado = true
+		}
 		if _, err := models.AddTipoPagos(&v); err == nil {
 			c.Ctx.Output.SetStatus(201)
 			c.Data["json"] = v
 		} else {
 			c.Data["json"] = err.Error()
+			c.Ctx.Output.SetStatus(500)
+			c.Data["json"] = map[string]interface{}{
+				"success": false,
+				"status":  500,
+				"message": err.Error(),
+			}
 		}
 	} else {
 		c.Data["json"] = err.Error()
+		c.Ctx.Output.SetStatus(400)
+		c.Data["json"] = map[string]interface{}{
+			"success": false,
+			"status":  400,
+			"message": err.Error(),
+		}
 	}
 	c.ServeJSON()
 }
@@ -127,7 +143,11 @@ func (c *TipoPagosController) GetAll() {
 	if err != nil {
 		c.Data["json"] = err.Error()
 	} else {
-		c.Data["json"] = l
+		c.Data["json"] = map[string]interface{}{
+			"succes": true,
+			"status": 200,
+			"message": "consulta realizada correctamente",
+			"data":    l}
 	}
 	c.ServeJSON()
 }
@@ -147,6 +167,11 @@ func (c *TipoPagosController) Put() {
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
 		if err := models.UpdateTipoPagosById(&v); err == nil {
 			c.Data["json"] = "OK"
+			c.Data["json"] = map[string]interface{}{
+				"succes": true,
+				"status": 200,
+				"message": "actualizacion realizada correctamente",
+				"data":    v}
 		} else {
 			c.Data["json"] = err.Error()
 		}
@@ -168,6 +193,11 @@ func (c *TipoPagosController) Delete() {
 	id, _ := strconv.Atoi(idStr)
 	if err := models.DeleteTipoPagos(id); err == nil {
 		c.Data["json"] = "OK"
+		c.Data["json"] = map[string]interface{}{
+			"succes": true,
+			"status": 200,
+			"message": "se elimino correctamente",
+			"dato eliminado con id": id}
 	} else {
 		c.Data["json"] = err.Error()
 	}

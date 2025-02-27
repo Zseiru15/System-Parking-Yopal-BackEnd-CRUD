@@ -3,7 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"errors"
-	"github.com/Zseiru15/API_CRUD_SPY/models"
+	"github.com/Zseiru15/System-Parking-Yopal-BackEnd/API_CRUD_SPY/models"
 	"strconv"
 	"strings"
 
@@ -34,6 +34,10 @@ func (c *PromocionesController) URLMapping() {
 func (c *PromocionesController) Post() {
 	var v models.Promociones
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
+		// Asignar Estado a true si no se especifica
+		if !v.Estado {
+			v.Estado = true
+		}
 		if _, err := models.AddPromociones(&v); err == nil {
 			c.Ctx.Output.SetStatus(201)
 			c.Data["json"] = map[string]interface{}{
@@ -43,9 +47,21 @@ func (c *PromocionesController) Post() {
 				"data":    v}
 		} else {
 			c.Data["json"] = err.Error()
+			c.Ctx.Output.SetStatus(500)
+			c.Data["json"] = map[string]interface{}{
+				"success": false,
+				"status":  500,
+				"message": err.Error(),
+			}
 		}
 	} else {
 		c.Data["json"] = err.Error()
+		c.Ctx.Output.SetStatus(400)
+		c.Data["json"] = map[string]interface{}{
+			"success": false,
+			"status":  400,
+			"message": err.Error(),
+		}
 	}
 	c.ServeJSON()
 }
@@ -155,6 +171,11 @@ func (c *PromocionesController) Put() {
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
 		if err := models.UpdatePromocionesById(&v); err == nil {
 			c.Data["json"] = "OK"
+			c.Data["json"] = map[string]interface{}{
+				"succes": true,
+				"status": 200,
+				"message": "actualizacion realizada correctamente",
+				"data":    v}
 		} else {
 			c.Data["json"] = err.Error()
 		}
@@ -176,6 +197,11 @@ func (c *PromocionesController) Delete() {
 	id, _ := strconv.Atoi(idStr)
 	if err := models.DeletePromociones(id); err == nil {
 		c.Data["json"] = "OK"
+		c.Data["json"] = map[string]interface{}{
+			"succes": true,
+			"status": 200,
+			"message": "se elimino correctamente",
+			"dato eliminado con id": id}
 	} else {
 		c.Data["json"] = err.Error()
 	}
