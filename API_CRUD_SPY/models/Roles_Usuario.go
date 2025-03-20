@@ -11,12 +11,12 @@ import (
 )
 
 type RolesUsuario struct {
-	Id                int       `orm:"column(Id_Tipo_Usuario);pk;auto"`
+	Id                int       `orm:"column(Id_Tipo_Usuario);pk"`
 	IdUsuariosFk      *Usuarios `orm:"column(Id_Usuarios_fk);rel(fk)"`
 	IdRolesFk         *Roles    `orm:"column(Id_Roles_fk);rel(fk)"`
 	Estado            bool      `orm:"column(Estado)"`
-	FechaRegistro     time.Time `orm:"column(Fecha_Registro);type(timestamp with time zone);auto_now_add"`
-	FechaModificacion time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
+	FechaRegistro     time.Time `orm:"column(Fecha_Registro);type(timestamp with time zone)"`
+	FechaModificacion time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone)"`
 }
 
 func (t *RolesUsuario) TableName() string {

@@ -1,8 +1,9 @@
-module github.com/Zseiru15/System-Parking-Yopal-BackEnd/API_CRUD_SPY
+module github.com/Zseiru15/System-Parking-Yopal-BackEnd-CRUD/API_CRUD_SPY
 
 go 1.23.1
 
 require (
+	github.com/Zseiru15/System-Parking-Yopal-BackEnd/API_CRUD_SPY v0.0.0-20250227223554-d042424f5ccb
 	github.com/astaxie/beego v1.12.3
 	github.com/lib/pq v1.10.9
 )

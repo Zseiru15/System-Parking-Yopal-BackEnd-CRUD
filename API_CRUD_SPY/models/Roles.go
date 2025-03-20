@@ -10,11 +10,11 @@ import (
 )
 
 type Roles struct {
-	Id                int    `orm:"column(Id_Roles);pk;auto"`
+	Id                int    `orm:"column(Id_Roles);pk"`
 	Roles             string `orm:"column(Roles)"`
 	Estado            bool   `orm:"column(Estado)"`
-	FechaRegistro     string `orm:"column(Fecha_Registro);auto_now_add"`
-	FechaModificacion string `orm:"column(Fecha_Modificacion);auto_now"`
+	FechaRegistro     string `orm:"column(Fecha_Registro)"`
+	FechaModificacion string `orm:"column(Fecha_Modificacion)"`
 }
 
 func (t *Roles) TableName() string {

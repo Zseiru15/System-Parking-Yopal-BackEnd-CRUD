@@ -11,7 +11,7 @@ import (
 )
 
 type Estacionamientos struct {
-	Id                  int                       `orm:"column(Id_estacionamientos);pk;auto"`
+	Id                  int                       `orm:"column(Id_estacionamientos);pk"`
 	Nombres             string                    `orm:"column(Nombres)"`
 	Direccion           string                    `orm:"column(Direccion)"`
 	Email               string                    `orm:"column(Email)"`
@@ -23,10 +23,12 @@ type Estacionamientos struct {
 	Ancho               string                    `orm:"column(Ancho)"`
 	Altura              string                    `orm:"column(Altura)"`
 	Descripcion         string                    `orm:"column(Descripcion)"`
-	FechaRegistro       time.Time                 `orm:"column(Fecha_Registro);type(timestamp with time zone);auto_now_add"`
-	FechaInicio         time.Time                 `orm:"column(Fecha_Inicio);type(timestamp with time zone);auto_now_add"`
-	FechaModificacion   time.Time                 `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
+	FechaRegistro       time.Time                 `orm:"column(Fecha_Registro);type(timestamp with time zone)"`
+	FechaInicio         time.Time                 `orm:"column(Fecha_Inicio);type(timestamp with time zone)"`
+	FechaModificacion   time.Time                 `orm:"column(Fecha_Modificacion);type(timestamp with time zone)"`
 	FechaFinal          time.Time                 `orm:"column(Fecha_Final);type(timestamp with time zone)"`
+	Latitud             float64                   `orm:"column(Latitud)"`
+	Longitud            float64                   `orm:"column(Longitud)"`
 }
 
 func (t *Estacionamientos) TableName() string {

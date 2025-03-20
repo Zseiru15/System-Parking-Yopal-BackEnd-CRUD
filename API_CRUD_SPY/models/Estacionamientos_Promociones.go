@@ -11,12 +11,12 @@ import (
 )
 
 type EstacionamientosPromociones struct {
-	Id                   int               `orm:"column(Id_Estacionamientos_Promociones);pk;auto"`
+	Id                   int               `orm:"column(Id_Estacionamientos_Promociones);pk"`
 	IdEstacionamientosFk *Estacionamientos `orm:"column(Id_Estacionamientos_fk);rel(fk)"`
 	IdPromocionesFk      *Promociones      `orm:"column(Id_Promociones_fk);rel(fk)"`
 	Estado               bool              `orm:"column(Estado)"`
-	FechaRegistro        time.Time         `orm:"column(Fecha_Registro);type(timestamp with time zone);auto_now_add"`
-	FechaModificacion    time.Time         `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
+	FechaRegistro        time.Time         `orm:"column(Fecha_Registro);type(timestamp with time zone)"`
+	FechaModificacion    time.Time         `orm:"column(Fecha_Modificacion);type(timestamp with time zone)"`
 }
 
 func (t *EstacionamientosPromociones) TableName() string {

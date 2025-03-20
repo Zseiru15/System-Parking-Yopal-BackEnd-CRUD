@@ -11,14 +11,14 @@ import (
 )
 
 type Vehiculos struct {
-	Id                int       `orm:"column(Id_vehiculos);pk;auto"`
+	Id                int       `orm:"column(Id_vehiculos);pk"`
 	Placa             string    `orm:"column(Placa)"`
 	Marca             string    `orm:"column(Marca)"`
 	Año               string    `orm:"column(Año)"`
 	IdUsuariosFk      *Usuarios `orm:"column(Id_usuarios_fk);rel(fk)"`
 	Estado            bool      `orm:"column(Estado)"`
-	FechaRegistro     time.Time `orm:"column(Fecha_Registro);type(timestamp with time zone);auto_now_add"`
-	FechaModificacion time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
+	FechaRegistro     time.Time `orm:"column(Fecha_Registro);type(timestamp with time zone)"`
+	FechaModificacion time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone)"`
 }
 
 func (t *Vehiculos) TableName() string {
@@ -76,7 +76,7 @@ func GetAllVehiculos(query map[string]string, fields []string, sortby []string, 
 				} else if order[i] == "asc" {
 					orderby = v
 				} else {
-					return nil, errors.New("error: Invalid order. Must be either [asc|desc]")
+					return nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
 				sortFields = append(sortFields, orderby)
 			}
@@ -90,16 +90,16 @@ func GetAllVehiculos(query map[string]string, fields []string, sortby []string, 
 				} else if order[0] == "asc" {
 					orderby = v
 				} else {
-					return nil, errors.New("error: Invalid order. Must be either [asc|desc]")
+					return nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
 				sortFields = append(sortFields, orderby)
 			}
 		} else if len(sortby) != len(order) && len(order) != 1 {
-			return nil, errors.New("error: 'sortby', 'order' sizes mismatch or 'order' size is not 1")
+			return nil, errors.New("Error: 'sortby', 'order' sizes mismatch or 'order' size is not 1")
 		}
 	} else {
 		if len(order) != 0 {
-			return nil, errors.New("error: unused 'order' fields")
+			return nil, errors.New("Error: unused 'order' fields")
 		}
 	}
 

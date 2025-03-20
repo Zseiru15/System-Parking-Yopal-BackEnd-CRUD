@@ -3,7 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"errors"
-	"github.com/Zseiru15/System-Parking-Yopal-BackEnd/API_CRUD_SPY/models"
+	"github.com/Zseiru15/System-Parking-Yopal-BackEnd-CRUD/API_CRUD_SPY/models"
 	"strconv"
 	"strings"
 
@@ -34,34 +34,14 @@ func (c *RolesController) URLMapping() {
 func (c *RolesController) Post() {
 	var v models.Roles
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
-		// Asignar Estado a true si no se especifica
-		if !v.Estado {
-			v.Estado = true
-		}
 		if _, err := models.AddRoles(&v); err == nil {
 			c.Ctx.Output.SetStatus(201)
-			c.Data["json"] = map[string]interface{}{
-				"succes": true,
-				"status": 201,
-				"message": "creacion generada correctamente",
-				"data":    v}
+			c.Data["json"] = v
 		} else {
 			c.Data["json"] = err.Error()
-			c.Ctx.Output.SetStatus(500)
-			c.Data["json"] = map[string]interface{}{
-				"success": false,
-				"status":  500,
-				"message": err.Error(),
-			}
 		}
 	} else {
 		c.Data["json"] = err.Error()
-		c.Ctx.Output.SetStatus(400)
-		c.Data["json"] = map[string]interface{}{
-			"success": false,
-			"status":  400,
-			"message": err.Error(),
-		}
 	}
 	c.ServeJSON()
 }
@@ -80,11 +60,7 @@ func (c *RolesController) GetOne() {
 	if err != nil {
 		c.Data["json"] = err.Error()
 	} else {
-		c.Data["json"] = map[string]interface{}{
-			"succes": true,
-			"status": 200,
-			"message": "consulta realizada correctamente",
-			"data":    v}
+		c.Data["json"] = v
 	}
 	c.ServeJSON()
 }
@@ -147,11 +123,7 @@ func (c *RolesController) GetAll() {
 	if err != nil {
 		c.Data["json"] = err.Error()
 	} else {
-		c.Data["json"] = map[string]interface{}{
-			"succes": true,
-			"status": 200,
-			"message": "consulta realizada correctamente",
-			"data":    l}
+		c.Data["json"] = l
 	}
 	c.ServeJSON()
 }
@@ -171,11 +143,6 @@ func (c *RolesController) Put() {
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
 		if err := models.UpdateRolesById(&v); err == nil {
 			c.Data["json"] = "OK"
-			c.Data["json"] = map[string]interface{}{
-				"succes": true,
-				"status": 200,
-				"message": "actualizacion realizada correctamente",
-				"data":    v}
 		} else {
 			c.Data["json"] = err.Error()
 		}
@@ -197,11 +164,6 @@ func (c *RolesController) Delete() {
 	id, _ := strconv.Atoi(idStr)
 	if err := models.DeleteRoles(id); err == nil {
 		c.Data["json"] = "OK"
-		c.Data["json"] = map[string]interface{}{
-			"succes": true,
-			"status": 200,
-			"message": "se elimino correctamente",
-			"dato eliminado con id": id}
 	} else {
 		c.Data["json"] = err.Error()
 	}

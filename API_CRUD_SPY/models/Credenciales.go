@@ -11,11 +11,12 @@ import (
 )
 
 type Credenciales struct {
-	Id                int       `orm:"column(Id_Credenciales);pk;auto"`
-	Contraseña        string    `orm:"column(Contraseña)"`
-	Estado            bool      `orm:"column(Estado)"`
-	FechaRegistro     time.Time `orm:"column(Fecha_Registro);type(timestamp with time zone);auto_now_add"`
-	FechaModificacion time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
+	Id                  int       `orm:"column(Id_Credenciales);pk"`
+	Contrasena          string    `orm:"column(Contrasena)"`
+	Estado              bool      `orm:"column(Estado)"`
+	FechaRegistro       time.Time `orm:"column(Fecha_Registro);type(timestamp with time zone)"`
+	FechaModificacion   time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone)"`
+	ConfirmarContrasena string    `orm:"column(Confirmar_Contrasena)"`
 }
 
 func (t *Credenciales) TableName() string {

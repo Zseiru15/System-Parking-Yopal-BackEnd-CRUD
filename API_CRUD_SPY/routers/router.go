@@ -8,7 +8,7 @@
 package routers
 
 import (
-	"github.com/Zseiru15/System-Parking-Yopal-BackEnd/API_CRUD_SPY/controllers"
+	"github.com/Zseiru15/System-Parking-Yopal-BackEnd-CRUD/API_CRUD_SPY/controllers"
 
 	"github.com/astaxie/beego"
 )
@@ -16,27 +16,21 @@ import (
 func init() {
 	ns := beego.NewNamespace("/v1",
 
-		beego.NSNamespace("/Pagos",
-			beego.NSInclude(
-				&controllers.PagosController{},
-			),
-		),
-
 		beego.NSNamespace("/Estacionamientos_Promociones",
 			beego.NSInclude(
 				&controllers.EstacionamientosPromocionesController{},
 			),
 		),
 
-		beego.NSNamespace("/Promociones",
-			beego.NSInclude(
-				&controllers.PromocionesController{},
-			),
-		),
-
 		beego.NSNamespace("/Credenciales",
 			beego.NSInclude(
 				&controllers.CredencialesController{},
+			),
+		),
+
+		beego.NSNamespace("/Promociones",
+			beego.NSInclude(
+				&controllers.PromocionesController{},
 			),
 		),
 
@@ -64,15 +58,21 @@ func init() {
 			),
 		),
 
-		beego.NSNamespace("/Reservas",
-			beego.NSInclude(
-				&controllers.ReservasController{},
-			),
-		),
-
 		beego.NSNamespace("/Tipo_Pagos",
 			beego.NSInclude(
 				&controllers.TipoPagosController{},
+			),
+		),
+
+		beego.NSNamespace("/Pagos",
+			beego.NSInclude(
+				&controllers.PagosController{},
+			),
+		),
+
+		beego.NSNamespace("/Usuarios",
+			beego.NSInclude(
+				&controllers.UsuariosController{},
 			),
 		),
 
@@ -91,12 +91,6 @@ func init() {
 		beego.NSNamespace("/Slots",
 			beego.NSInclude(
 				&controllers.SlotsController{},
-			),
-		),
-
-		beego.NSNamespace("/Usuarios",
-			beego.NSInclude(
-				&controllers.UsuariosController{},
 			),
 		),
 
