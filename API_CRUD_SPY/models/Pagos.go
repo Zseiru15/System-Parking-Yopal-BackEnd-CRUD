@@ -16,7 +16,7 @@ type Pagos struct {
 	IdEstacionamientosFk *Estacionamientos `orm:"column(Id_Estacionamientos_fk);rel(fk)"`
 	IdTipoPagosFk        *TipoPagos        `orm:"column(Id_Tipo_Pagos_fk);rel(fk)"`
 	ValorPago            string            `orm:"column(Valor_Pago)"`
-	Estado               bool              `orm:"column(Estado)"`
+	Estado               bool				`orm:"column(Estado)"`
 	FechaRegistro        time.Time         `orm:"column(Fecha_Registro);type(timestamp with time zone);auto_now_add"`
 	FechaModificacion    time.Time         `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
 }

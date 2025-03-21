@@ -3,9 +3,10 @@ package controllers
 import (
 	"encoding/json"
 	"errors"
-	"github.com/Zseiru15/System-Parking-Yopal-BackEnd/API_CRUD_SPY/models"
 	"strconv"
 	"strings"
+
+	"github.com/Zseiru15/System-Parking-Yopal-BackEnd-CRUD/API_CRUD_SPY/models"
 
 	"github.com/astaxie/beego"
 )
@@ -41,8 +42,8 @@ func (c *CredencialesController) Post() {
 		if _, err := models.AddCredenciales(&v); err == nil {
 			c.Ctx.Output.SetStatus(201)
 			c.Data["json"] = map[string]interface{}{
-				"succes": true,
-				"status": 201,
+				"succes":  true,
+				"status":  201,
 				"message": "creacion generada correctamente",
 				"data":    v}
 		} else {
@@ -81,8 +82,8 @@ func (c *CredencialesController) GetOne() {
 		c.Data["json"] = err.Error()
 	} else {
 		c.Data["json"] = map[string]interface{}{
-			"succes": true,
-			"status": 200,
+			"succes":  true,
+			"status":  200,
 			"message": "consulta realizada correctamente",
 			"data":    v}
 	}
@@ -148,8 +149,8 @@ func (c *CredencialesController) GetAll() {
 		c.Data["json"] = err.Error()
 	} else {
 		c.Data["json"] = map[string]interface{}{
-			"succes": true,
-			"status": 200,
+			"succes":  true,
+			"status":  200,
 			"message": "consulta realizada correctamente",
 			"data":    l}
 	}
@@ -172,8 +173,8 @@ func (c *CredencialesController) Put() {
 		if err := models.UpdateCredencialesById(&v); err == nil {
 			c.Data["json"] = "OK"
 			c.Data["json"] = map[string]interface{}{
-				"succes": true,
-				"status": 200,
+				"succes":  true,
+				"status":  200,
 				"message": "actualizacion realizada correctamente",
 				"data":    v}
 		} else {
@@ -198,9 +199,9 @@ func (c *CredencialesController) Delete() {
 	if err := models.DeleteCredenciales(id); err == nil {
 		c.Data["json"] = "OK"
 		c.Data["json"] = map[string]interface{}{
-			"succes": true,
-			"status": 200,
-			"message": "se elimino correctamente",
+			"succes":                true,
+			"status":                200,
+			"message":               "se elimino correctamente",
 			"dato eliminado con id": id}
 	} else {
 		c.Data["json"] = err.Error()

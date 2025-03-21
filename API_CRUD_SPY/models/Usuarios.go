@@ -20,7 +20,7 @@ type Usuarios struct {
 	Direccion                    string        `orm:"column(Direccion)"`
 	Edad                         float64       `orm:"column(Edad)"`
 	FechaNacimiento              time.Time     `orm:"column(Fecha_nacimiento);type(timestamp with time zone)"`
-	IdContraseñaFk               *Credenciales `orm:"column(Id_Contraseña_fk);rel(fk)"`
+	IdContrasenaFk               *Credenciales `orm:"column(Id_Contrasena_fk);rel(fk)"`
 	Estado                       bool          `orm:"column(Estado)"`
 	FechaRegistro                time.Time     `orm:"column(Fecha_Registro);type(timestamp with time zone);auto_now_add"`
 	FechaModificacion            time.Time     `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`

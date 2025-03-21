@@ -27,8 +27,8 @@ type Estacionamientos struct {
 	FechaInicio         time.Time                 `orm:"column(Fecha_Inicio);type(timestamp with time zone);auto_now_add"`
 	FechaModificacion   time.Time                 `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
 	FechaFinal          time.Time                 `orm:"column(Fecha_Final);type(timestamp with time zone)"`
-	Latitud             float64                   `orm:"column(Latitud)" json:"longitud`
-	Longitud            float64                   `orm:"column(Longitud)" json:"longitud`
+	Latitud             float64                   `orm:"column(Latitud)"`
+	Longitud            float64                   `orm:"column(Longitud)"`
 }
 
 func (t *Estacionamientos) TableName() string {
