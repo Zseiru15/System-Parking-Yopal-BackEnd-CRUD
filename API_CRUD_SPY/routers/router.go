@@ -8,7 +8,7 @@
 package routers
 
 import (
-	"github.com/Zseiru15/System-Parking-Yopal-BackEnd-CRUD/API_CRUD_SPY/controllers"
+	"github.com/sena_2824182/System-Parking-Yopal-BackEnd-CRUD/API_CRUD_SPY/controllers"
 
 	"github.com/astaxie/beego"
 )

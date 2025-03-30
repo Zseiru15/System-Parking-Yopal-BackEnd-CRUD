@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Zseiru15/System-Parking-Yopal-BackEnd-CRUD/API_CRUD_SPY/models"
+	"github.com/sena_2824182/System-Parking-Yopal-BackEnd-CRUD/API_CRUD_SPY/models"
 
 	"github.com/astaxie/beego"
 )
