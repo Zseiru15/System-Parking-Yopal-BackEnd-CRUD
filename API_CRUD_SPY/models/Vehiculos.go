@@ -19,6 +19,7 @@ type Vehiculos struct {
 	Estado            bool      `orm:"column(Estado)"`
 	FechaRegistro     time.Time `orm:"column(Fecha_Registro);type(timestamp with time zone);auto_now_add"`
 	FechaModificacion time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
+	Imagen            string    `orm:"column(Imagen)"`
 }
 
 func (t *Vehiculos) TableName() string {
