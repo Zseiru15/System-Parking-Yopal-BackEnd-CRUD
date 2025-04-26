@@ -29,6 +29,7 @@ type Estacionamientos struct {
 	FechaFinal          time.Time                 `orm:"column(Fecha_Final);type(timestamp with time zone)"`
 	Latitud             float64                   `orm:"column(Latitud)"`
 	Longitud            float64                   `orm:"column(Longitud)"`
+	Imagen              string                    `orm:"column(Imagen)"`
 }
 
 func (t *Estacionamientos) TableName() string {
