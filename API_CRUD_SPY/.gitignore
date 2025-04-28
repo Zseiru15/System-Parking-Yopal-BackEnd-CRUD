@@ -27,3 +27,7 @@ build/
 
 # Archivos de control de versiones antiguos
 *.orig
+
+
+go.mod
+go.sun
