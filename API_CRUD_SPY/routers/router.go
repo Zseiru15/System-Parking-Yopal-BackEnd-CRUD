@@ -14,6 +14,7 @@ import (
 )
 
 func init() {
+
 	ns := beego.NewNamespace("/v1",
 
 		beego.NSNamespace("/Estacionamientos_Promociones",
@@ -113,4 +114,8 @@ func init() {
 		),
 	)
 	beego.AddNamespace(ns)
+
+	// Authentication routes
+	beego.Router("/api/auth/register", &controllers.AuthController{}, "post:Register")
+	beego.Router("/api/auth/login", &controllers.AuthController{}, "post:Login")
 }

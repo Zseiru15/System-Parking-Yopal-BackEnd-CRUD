@@ -5,6 +5,8 @@ import (
 	"errors"
 	"strconv"
 	"strings"
+	"golang.org/x/crypto/bcrypt"
+	"github.com/astaxie/beego/orm"
 
 	"github.com/sena_2824182/System-Parking-Yopal-BackEnd-CRUD/API_CRUD_SPY/models"
 
@@ -33,38 +35,63 @@ func (c *UsuariosController) URLMapping() {
 // @Failure 403 body is empty
 // @router / [post]
 func (c *UsuariosController) Post() {
-	var v models.Usuarios
-	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
-		// Asignar Estado a true si no se especifica
-		if !v.Estado {
-			v.Estado = true
-		}
-		if _, err := models.AddUsuarios(&v); err == nil {
-			c.Ctx.Output.SetStatus(201)
-			c.Data["json"] = map[string]interface{}{
-				"succes":  true,
-				"status":  201,
-				"message": "creacion generada correctamente",
-				"data":    v}
-		} else {
-			c.Data["json"] = err.Error()
-			c.Ctx.Output.SetStatus(500)
-			c.Data["json"] = map[string]interface{}{
-				"success": false,
-				"status":  500,
-				"message": err.Error(),
-			}
-		}
-	} else {
-		c.Data["json"] = err.Error()
-		c.Ctx.Output.SetStatus(400)
-		c.Data["json"] = map[string]interface{}{
-			"success": false,
-			"status":  400,
-			"message": err.Error(),
-		}
-	}
-	c.ServeJSON()
+    // Estructura temporal para recibir datos
+    var requestData struct {
+        models.Usuarios
+        Contrasena string `json:"contrasena"` // Contraseña en texto plano
+    }
+    
+    // Parsear datos de entrada
+    if err := json.Unmarshal(c.Ctx.Input.RequestBody, &requestData); err != nil {
+        c.Data["json"] = map[string]interface{}{
+            "success": false,
+            "message": "Formato de datos incorrecto",
+        }
+        c.Ctx.Output.SetStatus(400)
+        c.ServeJSON()
+        return
+    }
+
+    // Hashear la contraseña con bcrypt
+    hashedPassword, err := bcrypt.GenerateFromPassword(
+        []byte(requestData.Contrasena), 
+        bcrypt.DefaultCost,
+    )
+    if err != nil {
+        c.Data["json"] = map[string]interface{}{
+            "success": false,
+            "message": "Error al procesar contraseña",
+        }
+        c.Ctx.Output.SetStatus(500)
+        c.ServeJSON()
+        return
+    }
+
+    // Crear registro de credenciales
+    credencial := models.Credenciales{
+        Contrasena: string(hashedPassword),
+        Estado:     true,
+    }
+
+    // Asignar al usuario
+    requestData.Usuarios.IdContrasenaFk = &credencial
+    requestData.Usuarios.Estado = true // Activar usuario por defecto
+
+    // Guardar en base de datos
+    if _, err := models.AddUsuarios(&requestData.Usuarios); err != nil {
+        c.Data["json"] = map[string]interface{}{
+            "success": false,
+            "message": "Error al crear usuario: " + err.Error(),
+        }
+        c.Ctx.Output.SetStatus(500)
+    } else {
+        c.Data["json"] = map[string]interface{}{
+            "success": true,
+            "message": "Usuario registrado exitosamente",
+        }
+        c.Ctx.Output.SetStatus(201)
+    }
+    c.ServeJSON()
 }
 
 // GetOne ...
@@ -82,7 +109,7 @@ func (c *UsuariosController) GetOne() {
 		c.Data["json"] = err.Error()
 	} else {
 		c.Data["json"] = map[string]interface{}{
-			"succes":  true,
+			"success":  true,
 			"status":  200,
 			"message": "consulta realizada correctamente",
 			"data":    v}
@@ -149,7 +176,7 @@ func (c *UsuariosController) GetAll() {
 		c.Data["json"] = err.Error()
 	} else {
 		c.Data["json"] = map[string]interface{}{
-			"succes":  true,
+			"success":  true,
 			"status":  200,
 			"message": "consulta realizada correctamente",
 			"data":    l}
@@ -167,24 +194,46 @@ func (c *UsuariosController) GetAll() {
 // @router /:id [put]
 func (c *UsuariosController) Put() {
 	idStr := c.Ctx.Input.Param(":id")
-	id, _ := strconv.Atoi(idStr)
-	v := models.Usuarios{Id: id}
-	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
-		if err := models.UpdateUsuariosById(&v); err == nil {
-			c.Data["json"] = "OK"
-			c.Data["json"] = map[string]interface{}{
-				"succes":  true,
-				"status":  200,
-				"message": "actualizacion realizada correctamente",
-				"data":    v}
-		} else {
-			c.Data["json"] = err.Error()
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.Data["json"] = map[string]interface{}{
+			"success": false,
+			"status":  400,
+			"message": "ID inválido, debe ser un número entero",
+		}
+		c.ServeJSON()
+		return
+	}
+
+	var v models.Usuarios
+	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err != nil {
+		c.Data["json"] = map[string]interface{}{
+			"success": false,
+			"status":  400,
+			"message": "JSON inválido: " + err.Error(),
+		}
+		c.ServeJSON()
+		return
+	}
+	v.Id = id
+
+	if err := models.UpdateUsuariosById(&v); err != nil {
+		c.Data["json"] = map[string]interface{}{
+			"success": false,
+			"status":  500,
+			"message": "Error al actualizar: " + err.Error(),
 		}
 	} else {
-		c.Data["json"] = err.Error()
+		c.Data["json"] = map[string]interface{}{
+			"success": true,
+			"status":  200,
+			"message": "Actualización realizada correctamente",
+			"data":    v,
+		}
 	}
 	c.ServeJSON()
 }
+
 
 // Delete ...
 // @Title Delete
@@ -195,16 +244,74 @@ func (c *UsuariosController) Put() {
 // @router /:id [delete]
 func (c *UsuariosController) Delete() {
 	idStr := c.Ctx.Input.Param(":id")
-	id, _ := strconv.Atoi(idStr)
-	if err := models.DeleteUsuarios(id); err == nil {
-		c.Data["json"] = "OK"
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
 		c.Data["json"] = map[string]interface{}{
-			"succes":                true,
-			"status":                200,
-			"message":               "se elimino correctamente",
-			"dato eliminado con id": id}
+			"success": false,
+			"status":  400,
+			"message": "ID inválido, debe ser un número entero",
+		}
+		c.ServeJSON()
+		return
+	}
+
+	if err := models.DeleteUsuarios(id); err != nil {
+		c.Data["json"] = map[string]interface{}{
+			"success": false,
+			"status":  500,
+			"message": "Error al eliminar: " + err.Error(),
+		}
 	} else {
-		c.Data["json"] = err.Error()
+		c.Data["json"] = map[string]interface{}{
+			"success": true,
+			"status":  200,
+			"message": "Se eliminó correctamente",
+			"id":      id,
+		}
 	}
 	c.ServeJSON()
+}
+
+// 3. Añadir nuevo endpoint para buscar por email
+// @Title GetByEmail
+// @Description Obtiene usuario por email
+// @Param   email  query  string  true  "Email a buscar"
+// @Success 200 {object} models.Usuarios
+// @Failure 404 Not found
+// @router /by-email [get]
+func (c *UsuariosController) GetByEmail() {
+    email := c.GetString("email")
+    if email == "" {
+        c.Data["json"] = map[string]interface{}{
+            "success": false,
+            "message": "Email es requerido",
+        }
+        c.Ctx.Output.SetStatus(400)
+        c.ServeJSON()
+        return
+    }
+
+    o := orm.NewOrm()
+    var usuario models.Usuarios
+    
+    // Buscar usuario con relaciones
+    err := o.QueryTable("usuarios").
+        Filter("Email", email).
+        RelatedSel("IdContrasenaFk").
+        RelatedSel("IdRolesFk").
+        One(&usuario)
+
+    if err != nil {
+        c.Data["json"] = map[string]interface{}{
+            "success": false,
+            "message": "Usuario no encontrado",
+        }
+        c.Ctx.Output.SetStatus(404)
+    } else {
+        c.Data["json"] = map[string]interface{}{
+            "success": true,
+            "data":    usuario,
+        }
+    }
+    c.ServeJSON()
 }

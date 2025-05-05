@@ -6,17 +6,32 @@ import (
 	"reflect"
 	"strings"
 	"time"
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/astaxie/beego/orm"
 )
 
+// Modificar estructura para omitir confirmación
 type Credenciales struct {
-	Id                  int       `orm:"column(Id_Credenciales);pk;auto"`
-	Contrasena          string    `orm:"column(Contrasena)"`
-	Estado              bool      `orm:"column(Estado)"`
-	FechaRegistro       time.Time `orm:"column(Fecha_Registro);type(timestamp with time zone);auto_now_add"`
-	FechaModificacion   time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
-	ConfirmarContrasena string    `orm:"column(Confirmar_Contrasena)"`
+    Id                int       `orm:"column(Id_Credenciales);pk;auto"`
+    Contrasena        string    `orm:"column(Contrasena);size(255)"` // Para almacenar hash
+    Estado            bool      `orm:"column(Estado)"`
+    FechaRegistro     time.Time `orm:"column(Fecha_Registro);type(timestamp with time zone);auto_now_add"`
+    FechaModificacion time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
+}
+
+// Agrega estos nuevos métodos
+func HashContrasena(contrasena string) (string, error) {
+    hash, err := bcrypt.GenerateFromPassword([]byte(contrasena), bcrypt.DefaultCost)
+    return string(hash), err
+}
+
+// Nuevo método para verificar contraseña
+func (c *Credenciales) VerificarContrasena(contrasena string) error {
+    return bcrypt.CompareHashAndPassword(
+        []byte(c.Contrasena), 
+        []byte(contrasena),
+    )
 }
 
 func (t *Credenciales) TableName() string {
