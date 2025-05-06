@@ -17,7 +17,6 @@ type EstacionamientosPromociones struct {
 	Estado               bool              `orm:"column(Estado)"`
 	FechaRegistro        time.Time         `orm:"column(Fecha_Registro);type(timestamp with time zone);auto_now_add"`
 	FechaModificacion    time.Time         `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
-	Imagen               string            `orm:"column(Imagen)"`
 }
 
 func (t *EstacionamientosPromociones) TableName() string {
@@ -52,7 +51,7 @@ func GetEstacionamientosPromocionesById(id int) (v *EstacionamientosPromociones,
 func GetAllEstacionamientosPromociones(query map[string]string, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (ml []interface{}, err error) {
 	o := orm.NewOrm()
-	qs := o.QueryTable(new(EstacionamientosPromociones))
+	qs := o.QueryTable(new(EstacionamientosPromociones)).RelatedSel()
 	// query k=v
 	for k, v := range query {
 		// rewrite dot-notation to Object__Attribute

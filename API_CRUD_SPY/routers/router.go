@@ -46,12 +46,6 @@ func init() {
 			),
 		),
 
-		beego.NSNamespace("/Cargos",
-			beego.NSInclude(
-				&controllers.CargosController{},
-			),
-		),
-
 		beego.NSNamespace("/Roles",
 			beego.NSInclude(
 				&controllers.RolesController{},
@@ -76,12 +70,6 @@ func init() {
 			),
 		),
 
-		beego.NSNamespace("/Roles_Usuario",
-			beego.NSInclude(
-				&controllers.RolesUsuarioController{},
-			),
-		),
-
 		beego.NSNamespace("/Ranking",
 			beego.NSInclude(
 				&controllers.RankingController{},
@@ -97,18 +85,6 @@ func init() {
 		beego.NSNamespace("/Vehiculos",
 			beego.NSInclude(
 				&controllers.VehiculosController{},
-			),
-		),
-
-		beego.NSNamespace("/Administradores_Estacionamientos",
-			beego.NSInclude(
-				&controllers.AdministradoresEstacionamientosController{},
-			),
-		),
-
-		beego.NSNamespace("/Administradores_Empleados",
-			beego.NSInclude(
-				&controllers.AdministradoresEmpleadosController{},
 			),
 		),
 	)

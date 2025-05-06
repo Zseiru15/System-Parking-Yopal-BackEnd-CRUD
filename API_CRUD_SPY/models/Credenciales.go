@@ -16,7 +16,6 @@ type Credenciales struct {
 	Estado              bool      `orm:"column(Estado)"`
 	FechaRegistro       time.Time `orm:"column(Fecha_Registro);type(timestamp with time zone);auto_now_add"`
 	FechaModificacion   time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
-	ConfirmarContrasena string    `orm:"column(Confirmar_Contrasena)"`
 }
 
 func (t *Credenciales) TableName() string {
@@ -51,7 +50,7 @@ func GetCredencialesById(id int) (v *Credenciales, err error) {
 func GetAllCredenciales(query map[string]string, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (ml []interface{}, err error) {
 	o := orm.NewOrm()
-	qs := o.QueryTable(new(Credenciales))
+	qs := o.QueryTable(new(Credenciales)).RelatedSel()
 	// query k=v
 	for k, v := range query {
 		// rewrite dot-notation to Object__Attribute

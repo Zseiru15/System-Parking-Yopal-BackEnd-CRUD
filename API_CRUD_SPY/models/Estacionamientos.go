@@ -11,25 +11,25 @@ import (
 )
 
 type Estacionamientos struct {
-	Id                  int                       `orm:"column(Id_estacionamientos);pk;auto"`
-	Nombres             string                    `orm:"column(Nombres)"`
-	Direccion           string                    `orm:"column(Direccion)"`
-	Email               string                    `orm:"column(Email)"`
-	Telefono            float64                   `orm:"column(Telefono)"`
-	Capacidad           float64                   `orm:"column(Capacidad)"`
-	Estado              bool                      `orm:"column(Estado)"`
-	IdAdministradoresFk *AdministradoresEmpleados `orm:"column(Id_Administradores_fk);rel(fk)"`
-	Largo               string                    `orm:"column(Largo)"`
-	Ancho               string                    `orm:"column(Ancho)"`
-	Altura              string                    `orm:"column(Altura)"`
-	Descripcion         string                    `orm:"column(Descripcion)"`
-	FechaRegistro       time.Time                 `orm:"column(Fecha_Registro);type(timestamp with time zone);auto_now_add"`
-	FechaInicio         time.Time                 `orm:"column(Fecha_Inicio);type(timestamp with time zone);auto_now_add"`
-	FechaModificacion   time.Time                 `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
-	FechaFinal          time.Time                 `orm:"column(Fecha_Final);type(timestamp with time zone)"`
-	Latitud             float64                   `orm:"column(Latitud)"`
-	Longitud            float64                   `orm:"column(Longitud)"`
-	Imagen              string                    `orm:"column(Imagen)"`
+	Id                  int       `orm:"column(Id_estacionamientos);pk;auto"`
+	Nombres             string    `orm:"column(Nombres)"`
+	Direccion           string    `orm:"column(Direccion)"`
+	Email               string    `orm:"column(Email)"`
+	Telefono            float64   `orm:"column(Telefono)"`
+	Capacidad           float64   `orm:"column(Capacidad)"`
+	Estado              bool      `orm:"column(Estado)"`
+	IdAdministradoresFk *Usuarios `orm:"column(Id_Administradores_fk);rel(fk)"`
+	Largo               string    `orm:"column(Largo)"`
+	Ancho               string    `orm:"column(Ancho)"`
+	Altura              string    `orm:"column(Altura)"`
+	Descripcion         string    `orm:"column(Descripcion)"`
+	FechaRegistro       time.Time `orm:"column(Fecha_Registro);type(timestamp with time zone);auto_now_add"`
+	FechaInicio         time.Time `orm:"column(Fecha_Inicio);type(timestamp with time zone);auto_now_add"`
+	FechaModificacion   time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
+	FechaFinal          time.Time `orm:"column(Fecha_Final);type(timestamp with time zone)"`
+	Latitud             float64   `orm:"column(Latitud)"`
+	Longitud            float64   `orm:"column(Longitud)"`
+	Imagen              string    `orm:"column(Imagen)"`
 }
 
 func (t *Estacionamientos) TableName() string {
@@ -64,7 +64,7 @@ func GetEstacionamientosById(id int) (v *Estacionamientos, err error) {
 func GetAllEstacionamientos(query map[string]string, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (ml []interface{}, err error) {
 	o := orm.NewOrm()
-	qs := o.QueryTable(new(Estacionamientos))
+	qs := o.QueryTable(new(Estacionamientos)).RelatedSel()
 	// query k=v
 	for k, v := range query {
 		// rewrite dot-notation to Object__Attribute

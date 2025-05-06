@@ -12,6 +12,7 @@ import (
 type Roles struct {
 	Id                int    `orm:"column(Id_Roles);pk;auto"`
 	Roles             string `orm:"column(Roles)"`
+	Cargos            string `orm:"column(Cargos);null"`
 	Estado            bool   `orm:"column(Estado)"`
 	FechaRegistro     string `orm:"column(Fecha_Registro);auto_now_add"`
 	FechaModificacion string `orm:"column(Fecha_Modificacion);auto_now"`
@@ -49,7 +50,7 @@ func GetRolesById(id int) (v *Roles, err error) {
 func GetAllRoles(query map[string]string, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (ml []interface{}, err error) {
 	o := orm.NewOrm()
-	qs := o.QueryTable(new(Roles))
+	qs := o.QueryTable(new(Roles)).RelatedSel()
 	// query k=v
 	for k, v := range query {
 		// rewrite dot-notation to Object__Attribute
