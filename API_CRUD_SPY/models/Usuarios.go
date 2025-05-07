@@ -11,6 +11,31 @@ import (
 )
 
 type Usuarios struct {
+	Id                           int    `orm:"column(Id_usuarios);pk;auto"`
+	Nombres                      string `orm:"column(Nombres)"`
+	Apellidos                    string `orm:"column(Apellidos)"`
+	NumeroIdentificacionUsuarios string `orm:"column(Numero_Identificacion_Usuarios)"`
+	// Agrega esta anotación al campo Email para asegurar unicidad
+	Email             string        `orm:"column(Email);unique"`
+	Telefono          float64       `orm:"column(Telefono)"`
+	Direccion         string        `orm:"column(Direccion)"`
+	IdContrasenaFk    *Credenciales `orm:"column(Id_Contrasena_fk);rel(fk)"`
+	Estado            bool          `orm:"column(Estado)"`
+	FechaRegistro     time.Time     `orm:"column(Fecha_Registro);type(timestamp with time zone);auto_now_add"`
+	FechaModificacion time.Time     `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
+	IdRolesFk         *Roles        `orm:"column(Id_Roles_fk);rel(fk)"`
+	Imagen            string        `orm:"column(Imagen)"`
+}
+
+// Agrega este método para cargar relaciones automáticamente
+func (u *Usuarios) LoadRelated() error {
+    o := orm.NewOrm()
+    _, err := o.LoadRelated(u, "IdContrasenaFk")
+    if err != nil {
+        return err
+    }
+    _, err = o.LoadRelated(u, "IdRolesFk")
+    return err
 	Id                           int           `orm:"column(Id_usuarios);pk;auto"`
 	Nombres                      string        `orm:"column(Nombres)"`
 	Apellidos                    string        `orm:"column(Apellidos)"`

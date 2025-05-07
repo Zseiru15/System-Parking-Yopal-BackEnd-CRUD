@@ -2,11 +2,11 @@ package models
 
 import (
 	"errors"
-	"fmt"
 	"reflect"
 	"strings"
 	"time"
 
+	"golang.org/x/crypto/bcrypt"
 	"github.com/astaxie/beego/orm"
 )
 
@@ -26,16 +26,30 @@ func init() {
 	orm.RegisterModel(new(Credenciales))
 }
 
-// AddCredenciales insert a new Credenciales into database and returns
-// last inserted Id on success.
+func HashContrasena(contrasena string) (string, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(contrasena), bcrypt.DefaultCost)
+	return string(hash), err
+}
+
+func (c *Credenciales) VerificarContrasena(contrasena string) error {
+	return bcrypt.CompareHashAndPassword([]byte(c.Contrasena), []byte(contrasena))
+}
+
 func AddCredenciales(m *Credenciales) (id int64, err error) {
 	o := orm.NewOrm()
+
+	if m.Contrasena != "" {
+		hashed, err := HashContrasena(m.Contrasena)
+		if err != nil {
+			return 0, err
+		}
+		m.Contrasena = hashed
+	}
+
 	id, err = o.Insert(m)
 	return
 }
 
-// GetCredencialesById retrieves Credenciales by Id. Returns error if
-// Id doesn't exist
 func GetCredencialesById(id int) (v *Credenciales, err error) {
 	o := orm.NewOrm()
 	v = &Credenciales{Id: id}
@@ -45,27 +59,24 @@ func GetCredencialesById(id int) (v *Credenciales, err error) {
 	return nil, err
 }
 
-// GetAllCredenciales retrieves all Credenciales matches certain condition. Returns empty list if
-// no records exist
 func GetAllCredenciales(query map[string]string, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (ml []interface{}, err error) {
+
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(Credenciales)).RelatedSel()
 	// query k=v
 	for k, v := range query {
-		// rewrite dot-notation to Object__Attribute
 		k = strings.Replace(k, ".", "__", -1)
 		if strings.Contains(k, "isnull") {
-			qs = qs.Filter(k, (v == "true" || v == "1"))
+			qs = qs.Filter(k, v == "true" || v == "1")
 		} else {
 			qs = qs.Filter(k, v)
 		}
 	}
-	// order by:
+
 	var sortFields []string
 	if len(sortby) != 0 {
 		if len(sortby) == len(order) {
-			// 1) for each sort field, there is an associated order
 			for i, v := range sortby {
 				orderby := ""
 				if order[i] == "desc" {
@@ -73,13 +84,11 @@ func GetAllCredenciales(query map[string]string, fields []string, sortby []strin
 				} else if order[i] == "asc" {
 					orderby = v
 				} else {
-					return nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
+					return nil, errors.New("invalid order, must be asc or desc")
 				}
 				sortFields = append(sortFields, orderby)
 			}
-			qs = qs.OrderBy(sortFields...)
-		} else if len(sortby) != len(order) && len(order) == 1 {
-			// 2) there is exactly one order, all the sorted fields will be sorted by this order
+		} else if len(order) == 1 {
 			for _, v := range sortby {
 				orderby := ""
 				if order[0] == "desc" {
@@ -87,16 +96,12 @@ func GetAllCredenciales(query map[string]string, fields []string, sortby []strin
 				} else if order[0] == "asc" {
 					orderby = v
 				} else {
-					return nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
+					return nil, errors.New("invalid order, must be asc or desc")
 				}
 				sortFields = append(sortFields, orderby)
 			}
-		} else if len(sortby) != len(order) && len(order) != 1 {
-			return nil, errors.New("Error: 'sortby', 'order' sizes mismatch or 'order' size is not 1")
-		}
-	} else {
-		if len(order) != 0 {
-			return nil, errors.New("Error: unused 'order' fields")
+		} else {
+			return nil, errors.New("sortby and order size mismatch")
 		}
 	}
 
@@ -108,7 +113,6 @@ func GetAllCredenciales(query map[string]string, fields []string, sortby []strin
 				ml = append(ml, v)
 			}
 		} else {
-			// trim unused fields
 			for _, v := range l {
 				m := make(map[string]interface{})
 				val := reflect.ValueOf(v)
@@ -123,32 +127,28 @@ func GetAllCredenciales(query map[string]string, fields []string, sortby []strin
 	return nil, err
 }
 
-// UpdateCredenciales updates Credenciales by Id and returns error if
-// the record to be updated doesn't exist
-func UpdateCredencialesById(m *Credenciales) (err error) {
+func UpdateCredencialesById(m *Credenciales) error {
 	o := orm.NewOrm()
 	v := Credenciales{Id: m.Id}
-	// ascertain id exists in the database
-	if err = o.Read(&v); err == nil {
-		var num int64
-		if num, err = o.Update(m); err == nil {
-			fmt.Println("Number of records updated in database:", num)
+	if err := o.Read(&v); err == nil {
+		if m.Contrasena != "" {
+			hashed, err := HashContrasena(m.Contrasena)
+			if err != nil {
+				return err
+			}
+			m.Contrasena = hashed
 		}
+		_, err := o.Update(m)
+		return err
 	}
-	return
+	return errors.New("credencial no encontrada")
 }
 
-// DeleteCredenciales deletes Credenciales by Id and returns error if
-// the record to be deleted doesn't exist
-func DeleteCredenciales(id int) (err error) {
+func DeleteCredenciales(id int) error {
 	o := orm.NewOrm()
-	v := Credenciales{Id: id}
-	// ascertain id exists in the database
-	if err = o.Read(&v); err == nil {
-		var num int64
-		if num, err = o.Delete(&Credenciales{Id: id}); err == nil {
-			fmt.Println("Number of records deleted in database:", num)
-		}
+	if num, err := o.Delete(&Credenciales{Id: id}); err == nil && num > 0 {
+		return nil
+	} else {
+		return err
 	}
-	return
 }
