@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"errors"
 	"strconv"
 	"strings"
 
@@ -36,9 +35,10 @@ func (c *PagosController) Post() {
 	var v models.Pagos
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
 		// Asignar Estado a true si no se especifica
-		if !v.Estado {
-			v.Estado = true
+		if v.Status == "" {
+			v.Status = "Pendiente"
 		}
+		// Asignar Fecha de Creacion a la fecha actual si no se especifica		
 		if _, err := models.AddPagos(&v); err == nil {
 			c.Ctx.Output.SetStatus(201)
 			c.Data["json"] = map[string]interface{}{
@@ -110,49 +110,53 @@ func (c *PagosController) GetAll() {
 	var limit int64 = 10
 	var offset int64
 
-	// fields: col1,col2,entity.col3
 	if v := c.GetString("fields"); v != "" {
 		fields = strings.Split(v, ",")
 	}
-	// limit: 10 (default is 10)
 	if v, err := c.GetInt64("limit"); err == nil {
 		limit = v
 	}
-	// offset: 0 (default is 0)
 	if v, err := c.GetInt64("offset"); err == nil {
 		offset = v
 	}
-	// sortby: col1,col2
 	if v := c.GetString("sortby"); v != "" {
 		sortby = strings.Split(v, ",")
 	}
-	// order: desc,asc
 	if v := c.GetString("order"); v != "" {
 		order = strings.Split(v, ",")
 	}
-	// query: k:v,k:v
 	if v := c.GetString("query"); v != "" {
 		for _, cond := range strings.Split(v, ",") {
 			kv := strings.SplitN(cond, ":", 2)
 			if len(kv) != 2 {
-				c.Data["json"] = errors.New("Error: invalid query key/value pair")
+				c.Ctx.Output.SetStatus(400)
+				c.Data["json"] = map[string]interface{}{
+					"success": false,
+					"status":  400,
+					"message": "Error: invalid query key/value pair",
+				}
 				c.ServeJSON()
 				return
 			}
-			k, v := kv[0], kv[1]
-			query[k] = v
+			query[kv[0]] = kv[1]
 		}
 	}
 
 	l, err := models.GetAllPagos(query, fields, sortby, order, offset, limit)
 	if err != nil {
-		c.Data["json"] = err.Error()
+		c.Ctx.Output.SetStatus(500)
+		c.Data["json"] = map[string]interface{}{
+			"success": false,
+			"status":  500,
+			"message": err.Error(),
+		}
 	} else {
 		c.Data["json"] = map[string]interface{}{
-			"succes":  true,
+			"success": true,
 			"status":  200,
-			"message": "consulta realizada correctamente",
-			"data":    l}
+			"message": "Consulta realizada correctamente",
+			"data":    l,
+		}
 	}
 	c.ServeJSON()
 }
@@ -170,21 +174,42 @@ func (c *PagosController) Put() {
 	id, _ := strconv.Atoi(idStr)
 	v := models.Pagos{Id: id}
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
+		// Validar que el estado sea "Pago" o "Pendiente"
+		if v.Status != "Pago" && v.Status != "Pendiente" {
+			c.Data["json"] = map[string]interface{}{
+				"success": false,
+				"status":  400,
+				"message": "El estado debe ser 'Pago' o 'Pendiente'",
+			}
+			c.Ctx.Output.SetStatus(400)
+			c.ServeJSON()
+			return
+		}
 		if err := models.UpdatePagosById(&v); err == nil {
-			c.Data["json"] = "OK"
 			c.Data["json"] = map[string]interface{}{
 				"succes":  true,
 				"status":  200,
 				"message": "actualizacion realizada correctamente",
 				"data":    v}
 		} else {
-			c.Data["json"] = err.Error()
+			c.Data["json"] = map[string]interface{}{
+				"success": false,
+				"status":  500,
+				"message": err.Error(),
+			}
+			c.Ctx.Output.SetStatus(500)
 		}
 	} else {
-		c.Data["json"] = err.Error()
+		c.Data["json"] = map[string]interface{}{
+			"success": false,
+			"status":  400,
+			"message": err.Error(),
+		}
+		c.Ctx.Output.SetStatus(400)
 	}
 	c.ServeJSON()
 }
+
 
 // Delete ...
 // @Title Delete

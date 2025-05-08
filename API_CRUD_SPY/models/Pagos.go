@@ -11,14 +11,14 @@ import (
 )
 
 type Pagos struct {
-	Id                   int               `orm:"column(Id_Pagos);pk;auto"`
-	IdUsuariosFk         *Usuarios         `orm:"column(Id_Usuarios_fk);rel(fk)"`
-	IdEstacionamientosFk *Estacionamientos `orm:"column(Id_Estacionamientos_fk);rel(fk)"`
-	IdTipoPagosFk        *TipoPagos        `orm:"column(Id_Tipo_Pagos_fk);rel(fk)"`
-	ValorPago            string            `orm:"column(Valor_Pago)"`
-	Estado               bool				`orm:"column(Estado)"`
-	FechaRegistro        time.Time         `orm:"column(Fecha_Registro);type(timestamp with time zone);auto_now_add"`
-	FechaModificacion    time.Time         `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
+	Id            int       `orm:"column(Id_Pagos);pk"`
+	PayPalOrderID string    `orm:"column(PayPal_Order_ID)"`
+	Amount        float64   `orm:"column(Amount);null"`
+	Currency      string    `orm:"column(Currency);null"`
+	Status        string    `orm:"column(Status);null"`
+	PayerEmail    string    `orm:"column(Payer_Email);null"`
+	ReceiverEmail string    `orm:"column(Receiver_Email);null"`
+	CreatedAt     time.Time `orm:"column(Created_At);type(timestamp with time zone);null;auto_now_add"`
 }
 
 func (t *Pagos) TableName() string {

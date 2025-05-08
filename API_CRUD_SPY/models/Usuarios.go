@@ -17,7 +17,6 @@ type Usuarios struct {
 	NumeroIdentificacionUsuarios string        `orm:"column(Numero_Identificacion_Usuarios)"`
 	Email                        string        `orm:"column(Email)"`
 	Telefono                     float64       `orm:"column(Telefono)"`
-	Direccion                    string        `orm:"column(Direccion)"`
 	IdContrasenaFk               *Credenciales `orm:"column(Id_Contrasena_fk);rel(fk)"`
 	Estado                       bool          `orm:"column(Estado)"`
 	FechaRegistro                time.Time     `orm:"column(Fecha_Registro);type(timestamp with time zone);auto_now_add"`

@@ -52,12 +52,6 @@ func init() {
 			),
 		),
 
-		beego.NSNamespace("/Tipo_Pagos",
-			beego.NSInclude(
-				&controllers.TipoPagosController{},
-			),
-		),
-
 		beego.NSNamespace("/Pagos",
 			beego.NSInclude(
 				&controllers.PagosController{},
