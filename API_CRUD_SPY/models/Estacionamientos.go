@@ -17,6 +17,9 @@ type Estacionamientos struct {
 	Email               string    `orm:"column(Email)"`
 	Telefono            float64   `orm:"column(Telefono)"`
 	Capacidad           float64   `orm:"column(Capacidad)"`
+	Carros              float64   `orm:"column(Carros)"`
+	Motos               float64   `orm:"column(Motos)"`
+	Bicicletas          float64   `orm:"column(Bicicletas)"`
 	Estado              bool      `orm:"column(Estado)"`
 	IdAdministradoresFk *Usuarios `orm:"column(Id_Administradores_fk);rel(fk)"`
 	Largo               string    `orm:"column(Largo)"`
@@ -29,6 +32,8 @@ type Estacionamientos struct {
 	FechaFinal          time.Time `orm:"column(Fecha_Final);type(timestamp with time zone)"`
 	Latitud             float64   `orm:"column(Latitud)"`
 	Longitud            float64   `orm:"column(Longitud)"`
+	Pisos               float64   `orm:"column(Pisos)"`
+	Tipo                string    `orm:"column(Tipo)"`
 	Imagen              string    `orm:"column(Imagen)"`
 }
 

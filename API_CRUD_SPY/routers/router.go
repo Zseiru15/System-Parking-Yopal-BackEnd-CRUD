@@ -16,67 +16,67 @@ import (
 func init() {
 	ns := beego.NewNamespace("/v1",
 
-		beego.NSNamespace("/Estacionamientos_Promociones",
+		beego.NSNamespace("/parqueaderos_promociones",
 			beego.NSInclude(
 				&controllers.EstacionamientosPromocionesController{},
 			),
 		),
 
-		beego.NSNamespace("/Credenciales",
+		beego.NSNamespace("/credenciales",
 			beego.NSInclude(
 				&controllers.CredencialesController{},
 			),
 		),
 
-		beego.NSNamespace("/Promociones",
+		beego.NSNamespace("/promociones",
 			beego.NSInclude(
 				&controllers.PromocionesController{},
 			),
 		),
 
-		beego.NSNamespace("/Estacionamientos",
+		beego.NSNamespace("/parqueaderos",
 			beego.NSInclude(
 				&controllers.EstacionamientosController{},
 			),
 		),
 
-		beego.NSNamespace("/Comentarios",
+		beego.NSNamespace("/comentarios",
 			beego.NSInclude(
 				&controllers.ComentariosController{},
 			),
 		),
 
-		beego.NSNamespace("/Roles",
+		beego.NSNamespace("/roles",
 			beego.NSInclude(
 				&controllers.RolesController{},
 			),
 		),
 
-		beego.NSNamespace("/Pagos",
+		beego.NSNamespace("/pagos",
 			beego.NSInclude(
 				&controllers.PagosController{},
 			),
 		),
 
-		beego.NSNamespace("/Usuarios",
+		beego.NSNamespace("/usuarios",
 			beego.NSInclude(
 				&controllers.UsuariosController{},
 			),
 		),
 
-		beego.NSNamespace("/Ranking",
+		beego.NSNamespace("/ranking",
 			beego.NSInclude(
 				&controllers.RankingController{},
 			),
 		),
 
-		beego.NSNamespace("/Slots",
+		beego.NSNamespace("/slots",
 			beego.NSInclude(
 				&controllers.SlotsController{},
 			),
 		),
 
-		beego.NSNamespace("/Vehiculos",
+		beego.NSNamespace("/vehiculos",
 			beego.NSInclude(
 				&controllers.VehiculosController{},
 			),
