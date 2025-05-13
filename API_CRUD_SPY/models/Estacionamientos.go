@@ -27,14 +27,14 @@ type Estacionamientos struct {
 	Altura              string    `orm:"column(Altura)"`
 	Descripcion         string    `orm:"column(Descripcion)"`
 	FechaRegistro       time.Time `orm:"column(Fecha_Registro);type(timestamp with time zone);auto_now_add"`
-	FechaInicio         time.Time `orm:"column(Fecha_Inicio);type(timestamp with time zone);auto_now_add"`
 	FechaModificacion   time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
 	FechaFinal          time.Time `orm:"column(Fecha_Final);type(timestamp with time zone)"`
 	Latitud             float64   `orm:"column(Latitud)"`
 	Longitud            float64   `orm:"column(Longitud)"`
 	Pisos               float64   `orm:"column(Pisos)"`
 	Tipo                string    `orm:"column(Tipo)"`
-	Imagen              string    `orm:"column(Imagen)"`
+	Sombra              bool      `orm:"column(Sombra)"`
+	Imagen string `orm:"column(Imagen)"`
 }
 
 func (t *Estacionamientos) TableName() string {
