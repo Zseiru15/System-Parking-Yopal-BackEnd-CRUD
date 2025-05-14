@@ -9,7 +9,6 @@ import (
 
 	"github.com/astaxie/beego/orm"
 )
-
 type Estacionamientos struct {
 	Id                  int       `orm:"column(Id_estacionamientos);pk;auto"`
 	Nombres             string    `orm:"column(Nombres)"`
