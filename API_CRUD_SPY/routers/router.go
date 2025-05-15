@@ -59,6 +59,7 @@ func init() {
 		),
 
 		beego.NSNamespace("/usuarios",
+			beego.NSRouter("/login/:email", &controllers.UsuariosController{}, "get:GetByEmail"),
 			beego.NSInclude(
 				&controllers.UsuariosController{},
 			),

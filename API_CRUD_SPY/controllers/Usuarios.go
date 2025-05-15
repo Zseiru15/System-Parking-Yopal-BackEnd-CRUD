@@ -90,6 +90,27 @@ func (c *UsuariosController) GetOne() {
 	c.ServeJSON()
 }
 
+func (c *UsuariosController) GetByEmail() {
+	email := c.Ctx.Input.Param(":email")
+
+	usuario, err := models.GetUsuarioByEmail(email)
+	if err != nil {
+		c.Data["json"] = map[string]interface{}{
+			"succes":  false,
+			"status":  404,
+			"message": "Usuario no encontrado",
+		}
+	} else {
+		c.Data["json"] = map[string]interface{}{
+			"succes":  true,
+			"status":  200,
+			"message": "consulta realizada correctamente",
+			"data":    usuario, // ⚠️ importante que esté dentro de "data"
+		}
+	}
+	c.ServeJSON()
+}
+
 // GetAll ...
 // @Title Get All
 // @Description get Usuarios

@@ -52,12 +52,27 @@ func GetUsuariosById(id int) (v *Usuarios, err error) {
 	return nil, err
 }
 
+func GetUsuarioByEmail(email string) (*Usuarios, error) {
+	o := orm.NewOrm()
+	var usuario Usuarios
+
+	err := o.QueryTable(new(Usuarios)). // ✅ Cambio aquí
+		Filter("Email__iexact", email). // Insensible a mayúsculas
+		RelatedSel().                   // Trae la relación con contraseñas y roles
+		One(&usuario)
+
+	if err != nil {
+		return nil, err
+	}
+	return &usuario, nil
+}
+
 // GetAllUsuarios retrieves all Usuarios matches certain condition. Returns empty list if
 // no records exist
 func GetAllUsuarios(query map[string]string, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (ml []interface{}, err error) {
 	o := orm.NewOrm()
-	qs := o.QueryTable(new(Usuarios))
+	qs := o.QueryTable(new(Usuarios)).RelatedSel()
 	// query k=v
 	for k, v := range query {
 		// rewrite dot-notation to Object__Attribute
