@@ -17,6 +17,8 @@ type Vehiculos struct {
 	Año               string    `orm:"column(Año)"`
 	IdUsuariosFk      *Usuarios `orm:"column(Id_usuarios_fk);rel(fk)"`
 	Estado            bool      `orm:"column(Estado)"`
+	Modelo            string    `orm:"column(Modelo)"`
+	Tipo              string    `orm:"column(Tipo)"`
 	FechaRegistro     time.Time `orm:"column(Fecha_Registro);type(timestamp with time zone);auto_now_add"`
 	FechaModificacion time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
 	Imagen            string    `orm:"column(Imagen)"`
