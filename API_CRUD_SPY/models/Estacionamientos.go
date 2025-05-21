@@ -15,7 +15,6 @@ type Estacionamientos struct {
 	Direccion           string    `orm:"column(Direccion)"`
 	Email               string    `orm:"column(Email)"`
 	Telefono            float64   `orm:"column(Telefono)"`
-	Capacidad           float64   `orm:"column(Capacidad)"`
 	Carros              float64   `orm:"column(Carros)"`
 	Motos               float64   `orm:"column(Motos)"`
 	Bicicletas          float64   `orm:"column(Bicicletas)"`
