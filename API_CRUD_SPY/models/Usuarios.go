@@ -17,11 +17,11 @@ type Usuarios struct {
 	NumeroIdentificacionUsuarios string        `orm:"column(Numero_Identificacion_Usuarios)"`
 	Email                        string        `orm:"column(Email)"`
 	Telefono                     float64       `orm:"column(Telefono)"`
-	IdContrasenaFk               *Credenciales `orm:"column(Id_Contrasena_fk);rel(fk)"`
+	IdContrasenaFk               *Credenciales `orm:"column(Id_Contrasena_fk);rel(fk);null"`
 	Estado                       bool          `orm:"column(Estado)"`
 	FechaRegistro                time.Time     `orm:"column(Fecha_Registro);type(timestamp with time zone);auto_now_add"`
 	FechaModificacion            time.Time     `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
-	IdRolesFk                    *Roles        `orm:"column(Id_Roles_fk);rel(fk)"`
+	IdRolesFk                    *Roles        `orm:"column(Id_Roles_fk);rel(fk);null"`
 	Imagen                       string        `orm:"column(Imagen)"`
 }
 
