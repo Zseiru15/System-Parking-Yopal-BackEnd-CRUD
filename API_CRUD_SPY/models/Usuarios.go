@@ -11,18 +11,19 @@ import (
 )
 
 type Usuarios struct {
-	Id                           int           `orm:"column(Id_usuarios);pk;auto"`
-	Nombres                      string        `orm:"column(Nombres)"`
-	Apellidos                    string        `orm:"column(Apellidos)"`
-	NumeroIdentificacionUsuarios string        `orm:"column(Numero_Identificacion_Usuarios)"`
-	Email                        string        `orm:"column(Email)"`
-	Telefono                     float64       `orm:"column(Telefono)"`
-	IdContrasenaFk               *Credenciales `orm:"column(Id_Contrasena_fk);rel(fk);null"`
-	Estado                       bool          `orm:"column(Estado)"`
-	FechaRegistro                time.Time     `orm:"column(Fecha_Registro);type(timestamp with time zone);auto_now_add"`
-	FechaModificacion            time.Time     `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
-	IdRolesFk                    *Roles        `orm:"column(Id_Roles_fk);rel(fk);null"`
-	Imagen                       string        `orm:"column(Imagen)"`
+	Id                           int               `orm:"column(Id_usuarios);pk;auto"`
+	Nombres                      string            `orm:"column(Nombres)"`
+	Apellidos                    string            `orm:"column(Apellidos)"`
+	NumeroIdentificacionUsuarios string            `orm:"column(Numero_Identificacion_Usuarios)"`
+	Email                        string            `orm:"column(Email)"`
+	Telefono                     float64           `orm:"column(Telefono)"`
+	IdContrasenaFk               *Credenciales     `orm:"column(Id_Contrasena_fk);rel(fk);null"`
+	Estado                       bool              `orm:"column(Estado)"`
+	FechaRegistro                time.Time         `orm:"column(Fecha_Registro);type(timestamp with time zone);auto_now_add"`
+	FechaModificacion            time.Time         `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
+	IdRolesFk                    *Roles            `orm:"column(Id_Roles_fk);rel(fk);null"`
+	IdEstacionamientoTrabajoFk   *Estacionamientos `orm:"column(Id_Estacionamiento_Trabajo_fk);rel(fk)"`
+	Imagen                       string            `orm:"column(Imagen)"`
 }
 
 func (t *Usuarios) TableName() string {
@@ -57,9 +58,9 @@ func GetUsuarioByEmail(email string) (*Usuarios, error) {
 	var usuario Usuarios
 
 	err := o.QueryTable(new(Usuarios)). // ✅ Cambio aquí
-		Filter("Email__iexact", email). // Insensible a mayúsculas
-		RelatedSel().                   // Trae la relación con contraseñas y roles
-		One(&usuario)
+						Filter("Email__iexact", email). // Insensible a mayúsculas
+						RelatedSel().                   // Trae la relación con contraseñas y roles
+						One(&usuario)
 
 	if err != nil {
 		return nil, err
