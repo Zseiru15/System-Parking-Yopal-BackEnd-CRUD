@@ -169,3 +169,16 @@ func DeleteEstacionamientos(id int) (err error) {
 	}
 	return
 }
+
+func UpdateEstacionamientos(id int, estado bool) error {
+	o := orm.NewOrm()
+	parqueadero := Estacionamientos{Id: id}
+
+	if err := o.Read(&parqueadero); err != nil {
+		return err
+	}
+
+	parqueadero.Estado = estado
+	_, err := o.Update(&parqueadero, "Estado")
+	return err
+}

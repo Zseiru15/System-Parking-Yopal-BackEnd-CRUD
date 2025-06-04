@@ -68,6 +68,22 @@ func GetUsuarioByEmail(email string) (*Usuarios, error) {
 	return &usuario, nil
 }
 
+// BuscarUsuarioPorIdentificacion busca un usuario por su número de identificación
+func BuscarUsuarioPorIdentificacion(identificacion string) (*Usuarios, error) {
+	o := orm.NewOrm()
+	var usuario Usuarios
+	err := o.QueryTable(new(Usuarios)).
+		Filter("NumeroIdentificacionUsuarios", identificacion).
+		RelatedSel().
+		One(&usuario)
+
+	if err != nil {
+		return nil, err
+	}
+	return &usuario, nil
+}
+
+
 // GetAllUsuarios retrieves all Usuarios matches certain condition. Returns empty list if
 // no records exist
 func GetAllUsuarios(query map[string]string, fields []string, sortby []string, order []string,

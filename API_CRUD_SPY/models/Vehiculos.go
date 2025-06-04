@@ -158,3 +158,16 @@ func DeleteVehiculos(id int) (err error) {
 	}
 	return
 }
+
+func UpdateVehiculoEstado(id int, estado bool) error {
+	o := orm.NewOrm()
+	vehiculo := Vehiculos{Id: id}
+
+	if err := o.Read(&vehiculo); err != nil {
+		return err
+	}
+
+	vehiculo.Estado = estado
+	_, err := o.Update(&vehiculo, "Estado")
+	return err
+}

@@ -142,6 +142,15 @@ func init() {
             Filters: nil,
             Params: nil})
 
+    beego.GlobalControllerRouter["github.com/sena_2824182/System-Parking-Yopal-BackEnd-CRUD/API_CRUD_SPY/controllers:EstacionamientosController"] = append(beego.GlobalControllerRouter["github.com/sena_2824182/System-Parking-Yopal-BackEnd-CRUD/API_CRUD_SPY/controllers:EstacionamientosController"],
+        beego.ControllerComments{
+            Method: "DesactivarParqueadero",
+            Router: "/parqueadero/desactivar/:id",
+            AllowHTTPMethods: []string{"put"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
     beego.GlobalControllerRouter["github.com/sena_2824182/System-Parking-Yopal-BackEnd-CRUD/API_CRUD_SPY/controllers:EstacionamientosPromocionesController"] = append(beego.GlobalControllerRouter["github.com/sena_2824182/System-Parking-Yopal-BackEnd-CRUD/API_CRUD_SPY/controllers:EstacionamientosPromocionesController"],
         beego.ControllerComments{
             Method: "Post",
@@ -457,6 +466,15 @@ func init() {
             Filters: nil,
             Params: nil})
 
+    beego.GlobalControllerRouter["github.com/sena_2824182/System-Parking-Yopal-BackEnd-CRUD/API_CRUD_SPY/controllers:UsuariosController"] = append(beego.GlobalControllerRouter["github.com/sena_2824182/System-Parking-Yopal-BackEnd-CRUD/API_CRUD_SPY/controllers:UsuariosController"],
+        beego.ControllerComments{
+            Method: "GetUsuarioPorIdentificacion",
+            Router: "/identificacion/:identificacion",
+            AllowHTTPMethods: []string{"get"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
     beego.GlobalControllerRouter["github.com/sena_2824182/System-Parking-Yopal-BackEnd-CRUD/API_CRUD_SPY/controllers:VehiculosController"] = append(beego.GlobalControllerRouter["github.com/sena_2824182/System-Parking-Yopal-BackEnd-CRUD/API_CRUD_SPY/controllers:VehiculosController"],
         beego.ControllerComments{
             Method: "Post",
@@ -498,6 +516,24 @@ func init() {
             Method: "Delete",
             Router: "/:id",
             AllowHTTPMethods: []string{"delete"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["github.com/sena_2824182/System-Parking-Yopal-BackEnd-CRUD/API_CRUD_SPY/controllers:VehiculosController"] = append(beego.GlobalControllerRouter["github.com/sena_2824182/System-Parking-Yopal-BackEnd-CRUD/API_CRUD_SPY/controllers:VehiculosController"],
+        beego.ControllerComments{
+            Method: "DeleteLogico",
+            Router: "/delete/:id",
+            AllowHTTPMethods: []string{"put"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["github.com/sena_2824182/System-Parking-Yopal-BackEnd-CRUD/API_CRUD_SPY/controllers:VehiculosController"] = append(beego.GlobalControllerRouter["github.com/sena_2824182/System-Parking-Yopal-BackEnd-CRUD/API_CRUD_SPY/controllers:VehiculosController"],
+        beego.ControllerComments{
+            Method: "DesactivarVehiculo",
+            Router: "/vehiculos/desactivar/:id",
+            AllowHTTPMethods: []string{"put"},
             MethodParams: param.Make(),
             Filters: nil,
             Params: nil})

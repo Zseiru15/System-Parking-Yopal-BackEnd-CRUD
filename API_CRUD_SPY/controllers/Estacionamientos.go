@@ -208,3 +208,43 @@ func (c *EstacionamientosController) Delete() {
 	}
 	c.ServeJSON()
 }
+
+// DesactivarParqueadero ...
+// @Title DesactivarParqueadero
+// @Description Desactiva (lógicamente) un vehículo por ID
+// @Param   id  path  string  true  "ID del vehículo"
+// @Success 200 {object} models.Parqueadero
+// @Failure 400 El ID es inválido
+// @Failure 404 Vehículo no encontrado
+// @router /parqueadero/desactivar/:id [put]
+func (c *EstacionamientosController) DesactivarParqueadero() {
+	idStr := c.Ctx.Input.Param(":id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.Data["json"] = map[string]interface{}{
+			"Success": false,
+			"Message": "ID inválido",
+			"Status":  400,
+		}
+		c.ServeJSON()
+		return
+	}
+
+	err = models.UpdateEstacionamientos(id, false)
+	if err != nil {
+		c.Data["json"] = map[string]interface{}{
+			"Success": false,
+			"Message": "Parqueadero no encontrado o error al actualizar",
+			"Status":  500,
+		}
+		c.ServeJSON()
+		return
+	}
+
+	c.Data["json"] = map[string]interface{}{
+		"Success": true,
+		"Message": "Parqueadero desactivado correctamente",
+		"Status":  200,
+	}
+	c.ServeJSON()
+}

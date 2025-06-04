@@ -210,3 +210,96 @@ func (c *VehiculosController) Delete() {
 	}
 	c.ServeJSON()
 }
+
+// DeleteLogico ...
+// @Title DeleteLogico
+// @Description Desactiva (borrado lógico) un vehículo por su ID
+// @Param	id		path 	string	true		"ID del vehículo a desactivar"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 ID inválido
+// @Failure 404 Vehículo no encontrado
+// @router /delete/:id [put]
+func (c *VehiculosController) DeleteLogico() {
+	idStr := c.Ctx.Input.Param(":id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.Data["json"] = map[string]interface{}{
+			"Success": false,
+			"Status":  400,
+			"Message": "ID inválido",
+		}
+		c.ServeJSON()
+		return
+	}
+
+	// Obtener vehículo
+	vehiculo, err := models.GetVehiculosById(id)
+	if err != nil {
+		c.Data["json"] = map[string]interface{}{
+			"Success": false,
+			"Status":  404,
+			"Message": "Vehículo no encontrado",
+		}
+		c.ServeJSON()
+		return
+	}
+
+	// Desactivar
+	vehiculo.Estado = false
+	if err := models.UpdateVehiculosById(vehiculo); err != nil {
+		c.Data["json"] = map[string]interface{}{
+			"Success": false,
+			"Status":  500,
+			"Message": "Error al desactivar vehículo",
+		}
+		c.ServeJSON()
+		return
+	}
+
+	c.Data["json"] = map[string]interface{}{
+		"Success": true,
+		"Status":  200,
+		"Message": "Vehículo desactivado correctamente",
+	}
+	c.ServeJSON()
+}
+
+// DesactivarVehiculo ...
+// @Title DesactivarVehiculo
+// @Description Desactiva (lógicamente) un vehículo por ID
+// @Param   id  path  string  true  "ID del vehículo"
+// @Success 200 {object} models.Vehiculos
+// @Failure 400 El ID es inválido
+// @Failure 404 Vehículo no encontrado
+// @router /vehiculos/desactivar/:id [put]
+func (c *VehiculosController) DesactivarVehiculo() {
+	idStr := c.Ctx.Input.Param(":id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.Data["json"] = map[string]interface{}{
+			"Success": false,
+			"Message": "ID inválido",
+			"Status":  400,
+		}
+		c.ServeJSON()
+		return
+	}
+
+	err = models.UpdateVehiculoEstado(id, false)
+	if err != nil {
+		c.Data["json"] = map[string]interface{}{
+			"Success": false,
+			"Message": "Vehículo no encontrado o error al actualizar",
+			"Status":  500,
+		}
+		c.ServeJSON()
+		return
+	}
+
+	c.Data["json"] = map[string]interface{}{
+		"Success": true,
+		"Message": "Vehículo desactivado correctamente",
+		"Status":  200,
+	}
+	c.ServeJSON()
+}

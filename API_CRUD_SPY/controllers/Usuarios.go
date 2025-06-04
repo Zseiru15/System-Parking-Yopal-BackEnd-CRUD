@@ -111,6 +111,45 @@ func (c *UsuariosController) GetByEmail() {
 	c.ServeJSON()
 }
 
+// GetUsuarioPorIdentificacion ...
+// @Title GetUsuarioPorIdentificacion
+// @Description obtiene un usuario por su número de identificación
+// @Param	identificacion		path 	string	true		"Número de identificación del usuario"
+// @Success 200 {object} models.Usuarios
+// @Failure 404 El usuario no fue encontrado
+// @router /identificacion/:identificacion [get]
+func (c *UsuariosController) GetUsuarioPorIdentificacion() {
+	identificacion := c.Ctx.Input.Param(":identificacion")
+	if identificacion == "" {
+		c.Data["json"] = map[string]interface{}{
+			"Success": false,
+			"Status":  400,
+			"Message": "Número de identificación requerido",
+		}
+		c.ServeJSON()
+		return
+	}
+
+	usuario, err := models.BuscarUsuarioPorIdentificacion(identificacion)
+	if err != nil {
+		c.Data["json"] = map[string]interface{}{
+			"Success": false,
+			"Status":  404,
+			"Message": "Usuario no encontrado",
+		}
+		c.ServeJSON()
+		return
+	}
+
+	c.Data["json"] = map[string]interface{}{
+		"Success": true,
+		"Status":  200,
+		"Message": "Usuario encontrado",
+		"Data":    usuario,
+	}
+	c.ServeJSON()
+}
+
 // GetAll ...
 // @Title Get All
 // @Description get Usuarios
