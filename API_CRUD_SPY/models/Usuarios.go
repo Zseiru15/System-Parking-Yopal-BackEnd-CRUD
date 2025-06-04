@@ -74,15 +74,20 @@ func BuscarUsuarioPorIdentificacion(identificacion string) (*Usuarios, error) {
 	var usuario Usuarios
 	err := o.QueryTable(new(Usuarios)).
 		Filter("NumeroIdentificacionUsuarios", identificacion).
-		RelatedSel().
 		One(&usuario)
 
 	if err != nil {
 		return nil, err
 	}
+	if usuario.IdRolesFk != nil {
+		o.Read(usuario.IdRolesFk)
+	}
+	if usuario.IdEstacionamientoTrabajoFk != nil {
+		o.Read(usuario.IdEstacionamientoTrabajoFk)
+	}
+
 	return &usuario, nil
 }
-
 
 // GetAllUsuarios retrieves all Usuarios matches certain condition. Returns empty list if
 // no records exist
