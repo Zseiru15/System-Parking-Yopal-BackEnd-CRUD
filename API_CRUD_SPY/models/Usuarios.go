@@ -22,7 +22,7 @@ type Usuarios struct {
 	FechaRegistro                time.Time         `orm:"column(Fecha_Registro);type(timestamp with time zone);auto_now_add"`
 	FechaModificacion            time.Time         `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
 	IdRolesFk                    *Roles            `orm:"column(Id_Roles_fk);rel(fk);null"`
-	IdEstacionamientoTrabajoFk   *Estacionamientos `orm:"column(Id_Estacionamiento_Trabajo_fk);rel(fk)"`
+	IdEstacionamientoTrabajoFk   *Estacionamientos `orm:"column(Id_Estacionamiento_Trabajo_fk);rel(fk);null"`
 	Imagen                       string            `orm:"column(Imagen)"`
 }
 
