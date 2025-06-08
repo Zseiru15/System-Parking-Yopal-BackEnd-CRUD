@@ -90,6 +90,47 @@ func (c *PromocionesController) GetOne() {
 	c.ServeJSON()
 }
 
+// GetByParqueadero ...
+// @Title GetByParqueadero
+// @Description obtiene promociones por Id del estacionamiento
+// @Param	idParqueadero	path	int	true	"ID del parqueadero"
+// @Success 200 {object} []models.Promociones
+// @Failure 400 ID inválido
+// @Failure 404 No se encontraron promociones
+// @router /parqueadero/:idParqueadero [get]
+func (c *PromocionesController) GetByParqueadero() {
+	idStr := c.Ctx.Input.Param(":idParqueadero")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.Data["json"] = map[string]interface{}{
+			"Success": false,
+			"Status":  400,
+			"Message": "ID inválido",
+		}
+		c.ServeJSON()
+		return
+	}
+
+	promos, err := models.GetPromocionesByParqueadero(id)
+	if err != nil || len(promos) == 0 {
+		c.Data["json"] = map[string]interface{}{
+			"Success": false,
+			"Status":  404,
+			"Message": "No se encontraron promociones",
+		}
+		c.ServeJSON()
+		return
+	}
+
+	c.Data["json"] = map[string]interface{}{
+		"Success": true,
+		"Status":  200,
+		"Message": "Promociones encontradas",
+		"Data":    promos,
+	}
+	c.ServeJSON()
+}
+
 // GetAll ...
 // @Title Get All
 // @Description get Promociones

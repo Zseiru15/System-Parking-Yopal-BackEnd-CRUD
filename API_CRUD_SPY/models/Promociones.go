@@ -56,6 +56,22 @@ func GetPromocionesById(id int) (v *Promociones, err error) {
 	return nil, err
 }
 
+// GetPromocionesByParqueadero busca todas las promociones por Id del estacionamiento
+func GetPromocionesByParqueadero(idParqueadero int) ([]Promociones, error) {
+	o := orm.NewOrm()
+	var promociones []Promociones
+
+	_, err := o.QueryTable(new(Promociones)).
+		RelatedSel().
+		Filter("IdEstacionamientosFk__Id", idParqueadero).
+		All(&promociones)
+
+	if err != nil {
+		return nil, err
+	}
+	return promociones, nil
+}
+
 // GetAllPromociones retrieves all Promociones matches certain condition. Returns empty list if
 // no records exist
 func GetAllPromociones(query map[string]string, fields []string, sortby []string, order []string,

@@ -23,6 +23,7 @@ func init() {
 		),
 
 		beego.NSNamespace("/promociones",
+		beego.NSRouter("/parqueadero/:idParqueadero", &controllers.PromocionesController{}, "get:GetByParqueadero"),
 			beego.NSInclude(
 				&controllers.PromocionesController{},
 			),
