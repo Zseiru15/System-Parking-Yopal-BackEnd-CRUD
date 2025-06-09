@@ -15,18 +15,18 @@ type Promociones struct {
 	IdEstacionamientosFk *Estacionamientos `orm:"column(Id_estacionamientos_fk);rel(fk)"`
 	Estado               bool              `orm:"column(Estado)"`
 	Descripcion          string            `orm:"column(Descripcion)"`
-	Carros               float64           `orm:"column(Carros)"`
-	ValorCarros          float64           `orm:"column(Valor_carro)"`
-	DescuentoCarros      float64           `orm:"column(Descuento_carro)"`
-	Motos                float64           `orm:"column(Motos)"`
-	ValorMotos           float64           `orm:"column(Valor_moto)"`
-	DescuentoMotos       float64           `orm:"column(Descuento_moto)"`
-	Bicicletas           float64           `orm:"column(Bicicletas)"`
-	ValorBicicletas      float64           `orm:"column(Valor_bicicleta)"`
-	DescuentoBicicletas  float64            `orm:"column(Descuento_bicicleta)"`
+	Carros               float64           `orm:"column(Carros);null"`
+	ValorCarros          float64           `orm:"column(Valor_carro);null"`
+	DescuentoCarros      float64           `orm:"column(Descuento_carro);null"`
+	Motos                float64           `orm:"column(Motos);null"`
+	ValorMotos           float64           `orm:"column(Valor_moto);null"`
+	DescuentoMotos       float64           `orm:"column(Descuento_moto);null"`
+	Bicicletas           float64           `orm:"column(Bicicletas);null"`
+	ValorBicicletas      float64           `orm:"column(Valor_bicicleta);null"`
+	DescuentoBicicletas  float64            `orm:"column(Descuento_bicicleta);null"`
 	FechaInicio          time.Time         `orm:"column(Fecha_Inicio);type(timestamp with time zone);auto_now_add"`
 	FechaModificacion    time.Time         `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
-	FechaFinal           time.Time         `orm:"column(Fecha_Final);type(timestamp with time zone)"`
+	FechaFinal           time.Time         `orm:"column(Fecha_Final);type(timestamp with time zone);null"`
 }
 
 func (t *Promociones) TableName() string {
