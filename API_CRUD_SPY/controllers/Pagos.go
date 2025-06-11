@@ -34,11 +34,9 @@ func (c *PagosController) URLMapping() {
 func (c *PagosController) Post() {
 	var v models.Pagos
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
-		// Asignar Estado a true si no se especifica
-		if v.Status == "" {
-			v.Status = "Pendiente"
-		}
-		// Asignar Fecha de Creacion a la fecha actual si no se especifica		
+		// Si no se especifica, asignar Status = true (puedes cambiar a false si lo prefieres)
+		v.Status = true
+
 		if _, err := models.AddPagos(&v); err == nil {
 			c.Ctx.Output.SetStatus(201)
 			c.Data["json"] = map[string]interface{}{
@@ -47,22 +45,20 @@ func (c *PagosController) Post() {
 				"message": "creacion generada correctamente",
 				"data":    v}
 		} else {
-			c.Data["json"] = err.Error()
-			c.Ctx.Output.SetStatus(500)
 			c.Data["json"] = map[string]interface{}{
 				"success": false,
 				"status":  500,
 				"message": err.Error(),
 			}
+			c.Ctx.Output.SetStatus(500)
 		}
 	} else {
-		c.Data["json"] = err.Error()
-		c.Ctx.Output.SetStatus(400)
 		c.Data["json"] = map[string]interface{}{
 			"success": false,
 			"status":  400,
 			"message": err.Error(),
 		}
+		c.Ctx.Output.SetStatus(400)
 	}
 	c.ServeJSON()
 }
@@ -173,18 +169,10 @@ func (c *PagosController) Put() {
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.Atoi(idStr)
 	v := models.Pagos{Id: id}
+
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
-		// Validar que el estado sea "Pago" o "Pendiente"
-		if v.Status != "Pago" && v.Status != "Pendiente" {
-			c.Data["json"] = map[string]interface{}{
-				"success": false,
-				"status":  400,
-				"message": "El estado debe ser 'Pago' o 'Pendiente'",
-			}
-			c.Ctx.Output.SetStatus(400)
-			c.ServeJSON()
-			return
-		}
+		// Aquí no es necesario validar strings, ya que Status es bool
+
 		if err := models.UpdatePagosById(&v); err == nil {
 			c.Data["json"] = map[string]interface{}{
 				"succes":  true,
@@ -209,7 +197,6 @@ func (c *PagosController) Put() {
 	}
 	c.ServeJSON()
 }
-
 
 // Delete ...
 // @Title Delete
