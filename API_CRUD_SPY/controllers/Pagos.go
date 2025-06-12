@@ -53,12 +53,13 @@ func (c *PagosController) Post() {
 			c.Ctx.Output.SetStatus(500)
 		}
 	} else {
+		c.Ctx.Output.SetStatus(400)
 		c.Data["json"] = map[string]interface{}{
 			"success": false,
 			"status":  400,
-			"message": err.Error(),
+			"message": "Error al decodificar el cuerpo de la solicitud",
+			"error":   err.Error(),
 		}
-		c.Ctx.Output.SetStatus(400)
 	}
 	c.ServeJSON()
 }

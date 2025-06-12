@@ -21,6 +21,7 @@ type Pagos struct {
 	PayerEmail           string            `orm:"column(Payer_Email);null"`
 	ReceiverEmail        string            `orm:"column(Receiver_Email);null"`
 	CreatedAt            time.Time         `orm:"column(Created_At);type(timestamp with time zone);null;auto_now_add"`
+	Tipo                 string            `orm:"column(Tipo);null"`
 }
 
 func (t *Pagos) TableName() string {

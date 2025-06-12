@@ -23,6 +23,9 @@ type Usuarios struct {
 	FechaModificacion            time.Time         `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
 	IdRolesFk                    *Roles            `orm:"column(Id_Roles_fk);rel(fk);null"`
 	IdEstacionamientoTrabajoFk   *Estacionamientos `orm:"column(Id_Estacionamiento_Trabajo_fk);rel(fk);null"`
+	Membresia                    bool              `orm:"column(Membresia)"`
+	InicioMembresia               time.Time         `orm:"column(Fecha_Membresia);type(timestamp with time zone);null"`
+	FinMembresia               time.Time         `orm:"column(Fin_Membresia);type(timestamp with time zone);null"`
 	Imagen                       string            `orm:"column(Imagen)"`
 }
 
