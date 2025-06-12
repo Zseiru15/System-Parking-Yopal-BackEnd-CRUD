@@ -11,15 +11,18 @@ import (
 )
 
 type Pagos struct {
-	Id                   int               `orm:"column(Id_Pagos);pk"`
+	Id                   int               `orm:"column(Id_Pagos);pk;auto"`
 	IdUsuariosFk         *Usuarios         `orm:"column(Id_Usuarios_fk);rel(fk)"`
-	IdEstacionamientosFk *Estacionamientos `orm:"column(Id_Estacionamientos_fk);rel(fk)"`
+	IdEstacionamientosFk *Estacionamientos `orm:"column(Id_Estacionamientos_fk);rel(fk);null"`
 	PayPalOrderID        string            `orm:"column(PayPal_Order_ID)"`
+	PayPalCaptureID      string            `orm:"column(PayPal_Capture_ID);null"`         // nuevo
+	PayerID              string            `orm:"column(Payer_ID);null"`                 // nuevo
+	PayerName            string            `orm:"column(Payer_Name);null"`               // nuevo
+	PayerEmail           string            `orm:"column(Payer_Email);null"`
 	Amount               float64           `orm:"column(Amount);null"`
 	Currency             string            `orm:"column(Currency);null"`
-	Status               bool              `orm:"column(Status);null"`
-	PayerEmail           string            `orm:"column(Payer_Email);null"`
-	ReceiverEmail        string            `orm:"column(Receiver_Email);null"`
+	Status               string            `orm:"column(Status);null"`                   // cambiado de bool a string
+	PayPalCreateTime     time.Time         `orm:"column(PayPal_Create_Time);null"`       // nuevo
 	CreatedAt            time.Time         `orm:"column(Created_At);type(timestamp with time zone);null;auto_now_add"`
 	Tipo                 string            `orm:"column(Tipo);null"`
 }
