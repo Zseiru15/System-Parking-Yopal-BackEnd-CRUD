@@ -34,31 +34,35 @@ func (c *PagosController) URLMapping() {
 func (c *PagosController) Post() {
 	var v models.Pagos
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
-		// Si no se especifica, asignar Status = true (puedes cambiar a false si lo prefieres)
-		v.Status = true
+
+		// Asegúrate de que el Status tenga un valor por defecto si no se envía
+		if v.Status == "" {
+			v.Status = "PENDING"
+		}
 
 		if _, err := models.AddPagos(&v); err == nil {
 			c.Ctx.Output.SetStatus(201)
 			c.Data["json"] = map[string]interface{}{
-				"succes":  true,
+				"success": true,
 				"status":  201,
-				"message": "creacion generada correctamente",
-				"data":    v}
+				"message": "creación generada correctamente",
+				"data":    v,
+			}
 		} else {
+			c.Ctx.Output.SetStatus(500)
 			c.Data["json"] = map[string]interface{}{
 				"success": false,
 				"status":  500,
 				"message": err.Error(),
 			}
-			c.Ctx.Output.SetStatus(500)
 		}
 	} else {
+		c.Ctx.Output.SetStatus(400)
 		c.Data["json"] = map[string]interface{}{
 			"success": false,
 			"status":  400,
 			"message": err.Error(),
 		}
-		c.Ctx.Output.SetStatus(400)
 	}
 	c.ServeJSON()
 }
