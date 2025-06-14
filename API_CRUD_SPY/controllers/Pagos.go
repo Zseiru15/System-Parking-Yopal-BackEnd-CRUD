@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -28,41 +29,51 @@ func (c *PagosController) URLMapping() {
 // @Title Post
 // @Description create Pagos
 // @Param	body		body 	models.Pagos	true		"body for Pagos content"
-// @Success 201 {int} models.Pagos
-// @Failure 403 body is empty
+// @Success 201 {object} models.Pagos
+// @Failure 400 JSON inválido
+// @Failure 500 Error interno
 // @router / [post]
 func (c *PagosController) Post() {
-	var v models.Pagos
-	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
+	var p models.Pagos
 
-		// Asegúrate de que el Status tenga un valor por defecto si no se envía
-		if v.Status == "" {
-			v.Status = "PENDING"
-		}
-
-		if _, err := models.AddPagos(&v); err == nil {
-			c.Ctx.Output.SetStatus(201)
-			c.Data["json"] = map[string]interface{}{
-				"success": true,
-				"status":  201,
-				"message": "creación generada correctamente",
-				"data":    v,
-			}
-		} else {
-			c.Ctx.Output.SetStatus(500)
-			c.Data["json"] = map[string]interface{}{
-				"success": false,
-				"status":  500,
-				"message": err.Error(),
-			}
-		}
-	} else {
+	// 1. Parsear JSON una sola vez
+	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &p); err != nil {
+		fmt.Println("❌ Error al parsear JSON:", err.Error())
 		c.Ctx.Output.SetStatus(400)
 		c.Data["json"] = map[string]interface{}{
 			"success": false,
-			"status":  400,
-			"message": err.Error(),
+			"message": "JSON inválido",
+			"error":   err.Error(),
 		}
+		c.ServeJSON()
+		return
+	}
+
+	// 2. Asignar estado por defecto si no se envía
+	p.Status = true
+
+	// 3. Guardar en la base de datos
+	id, err := models.AddPagos(&p)
+	if err != nil {
+		fmt.Println("❌ Error al guardar el pago:", err.Error())
+		c.Ctx.Output.SetStatus(500)
+		c.Data["json"] = map[string]interface{}{
+			"success": false,
+			"message": "Error al guardar el pago",
+			"error":   err.Error(),
+		}
+		c.ServeJSON()
+		return
+	}
+
+	p.Id = int(id)
+
+	// 4. Responder éxito
+	c.Ctx.Output.SetStatus(201)
+	c.Data["json"] = map[string]interface{}{
+		"success": true,
+		"message": "Pago registrado correctamente",
+		"data":    p,
 	}
 	c.ServeJSON()
 }
