@@ -19,6 +19,7 @@ type Pagos struct {
 	Currency             string            `orm:"column(Currency);null"`
 	Status               bool              `orm:"column(Status)" json:"Status"` // cambiado de bool a string
 	FechaPago            time.Time         `orm:"column(Fecha_Pago);type(timestamp with time zone);null;auto_now_add"`
+	TipoPago             string            `orm:"column(Tipo_Pago);null"`
 }
 
 func (t *Pagos) TableName() string {
